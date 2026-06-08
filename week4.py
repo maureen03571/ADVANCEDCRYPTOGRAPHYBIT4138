@@ -7,6 +7,10 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.backends import default_backend
 import os
 import time
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 def derive_key(password: str, salt: bytes, iterations=100000):
     kdf = PBKDF2HMAC(
@@ -89,7 +93,7 @@ def main():
     # Create a test file
     with open("secret.txt", "w") as f:
         f.write("This is confidential content.\nIt should be encrypted.")
-    password = "MyStrongP@ssw0rd"
+    password = os.getenv("SECRET_KEY", "MyStrongP@ssw0rd")  # Load from .env
     
     encrypt_file("secret.txt", "secret.txt.enc", password)
     decrypt_file("secret.txt.enc", "secret_decrypted.txt", password)
